@@ -14,7 +14,7 @@ public class SoundLibrary : MonoBehaviour
         {
             if (SoundEffect.groupID == name)
             {
-                return SoundEffect.clips[Random.Range(0, SoundEffect.clips.Lenght)];
+                return SoundEffect.clips[Random.Range(0, SoundEffect.clips.Length)];
             }
         }
         return null;

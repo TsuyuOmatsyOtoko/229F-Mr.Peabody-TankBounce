@@ -24,7 +24,7 @@ public class SoundManager : MonoBehaviour
     {
         if (clip != null)
         {
-            Sound.PlayClipAtPoint(clip, pos);
+            AudioSource.PlayClipAtPoint(clip, pos);
         }
     }
 }

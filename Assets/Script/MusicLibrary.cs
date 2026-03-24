@@ -6,15 +6,15 @@ public struct MusicTrack
     public string trackname;
     public AudioClip clip;
 }
-public class MusicLibarary : MonoBehaviour
+public class MusicLibrary : MonoBehaviour
 {
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public MusicTrack[] tracks;
     public AudioClip GetFromName(string trackname)
     {
-        foreach (var track in track)
+        foreach (var track in tracks)
         {
-        if (Track.trackname == tracks)
+        if (track.trackname == trackname)
         {
             return track.clip;
 
