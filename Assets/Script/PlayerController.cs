@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class PlayerController : MonoBehaviour
@@ -13,14 +14,21 @@ public class PlayerController : MonoBehaviour
     public float fireRate = 5f;
     public float shootDistance = 50f;
 
+    [Header("Sound")]
+    public AudioClip shootSound;
+    AudioSource audioSource;
+
     [Header("Health")]
     public float maxHealth = 100f;
+    float currentHealth;
+
+    [Header("UI")]
+    public Slider healthBar;
 
     Rigidbody rb;
-    float currentHealth;
     float fireCooldown;
 
-    // Laser
+    // Laser 
     LineRenderer line;
 
     void Start()
@@ -28,13 +36,20 @@ public class PlayerController : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         currentHealth = maxHealth;
 
+        // Setup Audio 
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            audioSource = gameObject.AddComponent<AudioSource>();
+        }
+
         // TOP-DOWN FIXES
         rb.useGravity = false;
         rb.constraints = RigidbodyConstraints.FreezePositionY |
                          RigidbodyConstraints.FreezeRotationX |
                          RigidbodyConstraints.FreezeRotationZ;
 
-        // Setup LineRenderer
+        // Setup LineRenderer 
         line = GetComponent<LineRenderer>();
         if (line == null)
         {
@@ -44,7 +59,14 @@ public class PlayerController : MonoBehaviour
         line.positionCount = 2;
         line.startWidth = 0.05f;
         line.endWidth = 0.05f;
-        line.enabled = true; // always show laser
+        line.enabled = true;
+
+        // Setup Health UI 
+        if (healthBar != null)
+        {
+            healthBar.maxValue = maxHealth;
+            healthBar.value = currentHealth;
+        }
     }
 
     void Update()
@@ -86,6 +108,12 @@ public class PlayerController : MonoBehaviour
             {
                 Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
             }
+
+            // PLAY SHOOT SOUND 
+            if (shootSound != null && audioSource != null)
+            {
+                audioSource.PlayOneShot(shootSound);
+            }
         }
     }
 
@@ -117,7 +145,12 @@ public class PlayerController : MonoBehaviour
     {
         currentHealth -= damage;
 
-        Debug.Log("Player HP: " + currentHealth);
+        if (healthBar != null)
+        {
+            healthBar.value = currentHealth;
+        }
+
+        Debug.Log("Player HP: " + currentHealth); 
 
         if (currentHealth <= 0)
         {
@@ -128,7 +161,7 @@ public class PlayerController : MonoBehaviour
     // ================= DEATH =================
     void Die()
     {
-        Debug.Log("Player Died!");
+        Debug.Log("Player Died!"); 
 
         rb.linearVelocity = Vector3.zero;
 
@@ -141,7 +174,7 @@ public class PlayerController : MonoBehaviour
 
         Destroy(gameObject);
 
-        // ⏸ Freeze game
+        // Freeze game 
         Time.timeScale = 0f;
     }
 }
